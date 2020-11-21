@@ -17,9 +17,11 @@ export default function LivePreviewExample(props) {
   const series = [
     {
         name: 'series-1',
+        data: []
       },
       {
         name: 'series-2',
+        data: []
       }
   ];
 

@@ -29,7 +29,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getFailed')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setFailed(data);
       setLoadingFailed(false);
     })
@@ -37,7 +36,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getPassed')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setPassed(data);
       setLoadingPassed(false);
     })
@@ -45,7 +43,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getAllTests')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setProducts(data);
       setLoadingAll(false);
     })
@@ -53,7 +50,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getSerialNos')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setSerials(data);
       setLoadingSerials(false);
     })
@@ -61,7 +57,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getTestNames')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setTestNames(data);
       setLoadingTestNames(false);
     })
@@ -69,7 +64,6 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getTestFields')
     .then(res => res.json())
     .then((data) => {
-      console.log(data);
       setTestFields(data);
       setLoadingTestFields(false);
     })
@@ -87,7 +81,6 @@ export default function DashboardDefault() {
     <Fragment>
         <PageTitle
           titleHeading="Default"
-          titleDescription="This is a dashboard page example built using this template."
         />
 
         <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields}/>

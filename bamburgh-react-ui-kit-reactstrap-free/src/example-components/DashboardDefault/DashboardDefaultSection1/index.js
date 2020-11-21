@@ -104,17 +104,48 @@ export default function LivePreviewExample(props) {
   const handleClick = event => () => {
     console.log(event)
     setActiveSerial(event)
-    callAPI()
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ "sn": activeSerial })
+    };
+    fetch('http://0.0.0.0:4000/getBySerial',requestOptions)
+        .then(res => res.json())
+        .then((data) => {
+          setTestInfo(data);
+          console.log(data);
+    });
   }
   const handleClick2 = event => () => {
     console.log(event)
     setActiveTN(event)
-    callAPI()
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ "test_field": activeTF })
+    };
+    fetch('http://0.0.0.0:4000/getByField',requestOptions)
+        .then(res => res.json())
+        .then((data) => {
+          setTestInfo(data);
+          console.log(data.map((test) => test.test_value));
+          console.log(data.map((test) => test.test_name));
+    });
   }
   const handleClick3 = event => () => {
     console.log(event)
     setActiveTF(event)
-    callAPI()
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ "test_field": activeTF })
+    };
+    fetch('http://0.0.0.0:4000/getByField',requestOptions)
+        .then(res => res.json())
+        .then((data) => {
+          setTestInfo(data);
+          console.log(data);
+    });
   }
 
   const serials = (props) => {
@@ -126,8 +157,8 @@ export default function LivePreviewExample(props) {
       );
     } else {
       return(
-        props.serials.map((sn, index) => 
-        <div role="menuitem"><a className="dropdown-item" key={index} onClick={handleClick(sn)} >{sn}</a></div>
+        props.serials.map((sn, id) => 
+        <div role="menuitem"><a className="dropdown-item" key={id} onClick={handleClick(sn)} >{sn}</a></div>
       )
       );
     }
