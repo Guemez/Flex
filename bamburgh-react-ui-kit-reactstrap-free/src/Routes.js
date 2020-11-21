@@ -22,6 +22,7 @@ import RegularTables4 from './example-pages/RegularTables4';
 import FormsLayout from './example-pages/FormsLayout';
 import FormsControls from './example-pages/FormsControls';
 
+const DashboardDefault = lazy(() => import('./example-pages/DashboardDefault'));
 const ListGroups = lazy(() => import('./example-pages/ListGroups'));
 const Modals = lazy(() => import('./example-pages/Modals'));
 const Notifications = lazy(() => import('./example-pages/Notifications'));
@@ -69,9 +70,10 @@ const Routes = () => {
           </div>
         }>
         <Switch>
-          <Redirect exact from="/" to="/LandingPage" />
+          <Redirect exact from="/" to="/DashboardDefault" />
           <Route
             path={[
+              '/DashboardDefault',
               '/Buttons',
               '/Dropdowns',
               '/NavigationMenus',
@@ -105,6 +107,7 @@ const Routes = () => {
                   exit="out"
                   variants={pageVariants}
                   transition={pageTransition}>
+                  <Route path="/DashboardDefault" component={DashboardDefault} />
                   <Route path="/Buttons" component={Buttons} />
                   <Route path="/Dropdowns" component={Dropdowns} />
                   <Route path="/NavigationMenus" component={NavigationMenus} />
