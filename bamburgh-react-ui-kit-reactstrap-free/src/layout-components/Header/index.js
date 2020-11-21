@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-import projectLogo from '../../assets/images/react.svg';
+import projectLogo from '../../assets/images/flex_logo.svg';
 
 class Header extends Component {
   render() {
@@ -21,11 +21,10 @@ class Header extends Component {
           )}>
           <div className="container-fluid">
             <div className="nav-logo">
-              <Link to="/" title="Bamburgh React UI Kit with Reactstrap Free">
-                <span className="text-white pb-2">Bamburgh</span>
+              <Link to="/" title="DashboardDefault">
                 <i className="bg-transparent">
                   <img
-                    alt="Bamburgh React UI Kit with Reactstrap Free"
+                    alt="DashboardDefault"
                     src={projectLogo}
                   />
                 </i>
