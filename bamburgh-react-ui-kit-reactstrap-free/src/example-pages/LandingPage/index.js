@@ -2,8 +2,6 @@ import React, { Fragment } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import hero8 from '../../assets/images/hero-bg/hero-8.jpg';
-
 import { Button, UncontrolledTooltip, Badge } from 'reactstrap';
 
 import IconsFontawesome from '../../example-components/Icons/IconsFontawesome';
@@ -41,7 +39,6 @@ const LandingPage = () => {
           <div className="flex-grow-1 w-100 d-flex align-items-center">
             <div
               className="bg-composed-wrapper--image bg-composed-filter-rm opacity-6"
-              style={{ backgroundImage: 'url(' + hero8 + ')' }}
             />
             <div className="bg-composed-wrapper--bg bg-vicious-stance opacity-5" />
             <div className="bg-composed-wrapper--content pt-5 pb-2 py-lg-5">

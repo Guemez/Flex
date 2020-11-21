@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Row, Col, Card, Button } from 'reactstrap';
 
-import hero8 from '../../../assets/images/hero-bg/hero-8.jpg';
-
 import { UncontrolledCarousel } from 'reactstrap';
 
 export default function LivePreviewExample() {
@@ -41,7 +39,6 @@ export default function LivePreviewExample() {
         <div className="flex-grow-1 w-100 d-flex rounded-lg align-items-center">
           <div
             className="bg-composed-wrapper--image rounded-lg opacity-3"
-            style={{ backgroundImage: 'url(' + hero8 + ')' }}
           />
           <div className="bg-composed-wrapper--bg bg-first rounded-lg opacity-3" />
           <div className="bg-composed-wrapper--content">
