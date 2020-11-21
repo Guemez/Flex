@@ -86,7 +86,7 @@ export default function LivePreviewExample(props) {
   const [activeSerial, setActiveSerial] = React.useState('SERIAL NUMBER');
   const [activeTN, setActiveTN] = React.useState('TEST NAME');
   const [activeTF, setActiveTF] = React.useState('TEST FIELD');
-  const [activeTS, setActiveTS] = React.useState('ALL');
+  const [activeTS, setActiveTS] = React.useState('TEST STATUS');
 
   function callAPI(){
     const requestOptions = {
@@ -325,6 +325,14 @@ export default function LivePreviewExample(props) {
                   </UncontrolledDropdown>
                   <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
+                      {activeTN}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {testNames(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
                       {activeTF}
             </DropdownToggle>
                     <DropdownMenu >
@@ -336,6 +344,7 @@ export default function LivePreviewExample(props) {
                       {activeTS}
             </DropdownToggle>
                     <DropdownMenu >
+                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("ALL")} >ALL</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("PASS")} >PASS</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FAIL")} >FAIL</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("WARNING")} >WARNING</a></div>
@@ -346,35 +355,13 @@ export default function LivePreviewExample(props) {
                             setActiveSerial("SERIAL NUMBER");
                             setActiveTF("TEST FIELD");
                             setTestValues([]);
-                            setActiveTS("ALL");
+                            setActiveTS("TEST STATUS");
                         }}>
                           CLEAR</Button>
                   </div>
                   </Col> 
                 </TabPane>
                 <TabPane tabId="2">
-                <div className="mb-0 p-3">
-                  <UncontrolledDropdown tag="span" className="m-2">
-                    <DropdownToggle color="second" caret>
-                      {activeTN}
-            </DropdownToggle>
-                    <DropdownMenu >
-                      {testNames(props)}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                  </div>  
-                </TabPane>
-                <TabPane tabId="3">
-                <div className="mb-0 p-3">
-                  <UncontrolledDropdown tag="span" className="m-2">
-                    <DropdownToggle color="second" caret>
-                      {activeTF}
-            </DropdownToggle>
-                    <DropdownMenu >
-                      {testFields(props)}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                  </div>  
                 </TabPane>
             </TabContent>
             <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
