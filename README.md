@@ -1,2 +1,0 @@
-# FlexFront
-npm start
