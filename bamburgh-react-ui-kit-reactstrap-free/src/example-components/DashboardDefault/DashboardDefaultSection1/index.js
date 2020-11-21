@@ -90,7 +90,7 @@ export default class LivePreviewExample extends Component {
       <Fragment>
         <Row>
           <Col lg="4">
-            <Card className="card-box bg-premium-dark border-0 text-light mb-5">
+            <Card className="card-box bg-night-sky border-0 text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
@@ -120,7 +120,7 @@ export default class LivePreviewExample extends Component {
             </Card>
           </Col>
           <Col lg="4">
-            <Card className="card-box bg-midnight-bloom text-light mb-5">
+            <Card className="card-box bg-serious-blue text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
