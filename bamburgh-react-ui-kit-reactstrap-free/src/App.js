@@ -258,7 +258,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <BrowserRouter basename="/bamburgh-react-ui-kit-reactstrap-free/">
+        <BrowserRouter basename="/flex/">
           <ScrollToTop>
             <Routes />
           </ScrollToTop>
