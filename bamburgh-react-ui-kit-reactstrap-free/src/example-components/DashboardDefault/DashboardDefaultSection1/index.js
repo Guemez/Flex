@@ -15,7 +15,8 @@ import { Row,
    NavItem, 
    NavLink, 
    TabContent, 
-   TabPane } from 'reactstrap';
+   TabPane,
+   Button } from 'reactstrap';
 
 import DashboardDefaultSection5 from 'example-components/DashboardDefault/DashboardDefaultSection5';
 
@@ -82,9 +83,10 @@ export default function LivePreviewExample(props) {
 
   const [testValues, setTestValues] = React.useState([]);
   const [testInfo, setTestInfo] = React.useState([]);
-  const [activeSerial, setActiveSerial] = React.useState('SN');
+  const [activeSerial, setActiveSerial] = React.useState('SERIAL NUMBER');
   const [activeTN, setActiveTN] = React.useState('TEST NAME');
   const [activeTF, setActiveTF] = React.useState('TEST FIELD');
+  const [activeTS, setActiveTS] = React.useState('ALL');
 
   function callAPI(){
     const requestOptions = {
@@ -146,6 +148,11 @@ export default function LivePreviewExample(props) {
           setTestInfo(data);
           console.log(data);
     });
+  }
+
+  const handleClick4 = event => () => {
+    console.log(event)
+    setActiveTS(event)
   }
 
   const serials = (props) => {
@@ -267,14 +274,6 @@ export default function LivePreviewExample(props) {
                     </div>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-down']}
-                    className="text-white mr-1"
-                  />
-                  <span className="text-white px-1">15.4%</span>
-                  <span className="text-white-50">{loadingAll(props)}</span>
-                </div>
               </CardBody>
             </Card>
           </Col>
@@ -314,7 +313,8 @@ export default function LivePreviewExample(props) {
             </Nav>
             <TabContent className="mb-5" activeTab={activeTab}>
                 <TabPane tabId="1">
-                <div className="mb-0 p-3">
+                  <Col>
+                  <div className="mb-0 p-3">
                   <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeSerial}
@@ -323,7 +323,34 @@ export default function LivePreviewExample(props) {
                       {serials(props)}
                     </DropdownMenu>
                   </UncontrolledDropdown>
-                  </div>  
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeTF}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {testFields(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeTS}
+            </DropdownToggle>
+                    <DropdownMenu >
+                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("PASS")} >PASS</a></div>
+                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FAIL")} >FAIL</a></div>
+                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("WARNING")} >WARNING</a></div>
+                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FATAL WARNING")} >FATAL WARNING</a></div>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  <Button className="m-2" outline color="second" onClick={() => {
+                            setActiveSerial("SERIAL NUMBER");
+                            setActiveTF("TEST FIELD");
+                            setTestValues([]);
+                            setActiveTS("ALL");
+                        }}>
+                          CLEAR</Button>
+                  </div>
+                  </Col> 
                 </TabPane>
                 <TabPane tabId="2">
                 <div className="mb-0 p-3">

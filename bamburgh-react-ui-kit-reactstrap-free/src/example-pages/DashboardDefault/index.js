@@ -85,9 +85,6 @@ export default function DashboardDefault() {
 
         <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields}/>
         <DashboardDefaultSection5 />
-        <DashboardDefaultSection2 />
-        <DashboardDefaultSection3 />
-        <DashboardDefaultSection4 />
       </Fragment>
   );
 }
