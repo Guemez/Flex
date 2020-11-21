@@ -1,103 +1,187 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useState } from 'react';
+
+import clsx from 'clsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Row, Col, CardBody, Card, Button } from 'reactstrap';
+import { Row,
+   Col, 
+   CardBody, 
+   Card, 
+   UncontrolledDropdown, 
+   DropdownToggle, 
+   DropdownMenu, 
+   Nav, 
+   NavItem, 
+   NavLink, 
+   TabContent, 
+   TabPane } from 'reactstrap';
 
-import Chart from 'react-apexcharts';
-export default class LivePreviewExample extends Component {
-  constructor(props) {
-    super(props);
+import DashboardDefaultSection5 from 'example-components/DashboardDefault/DashboardDefaultSection5';
 
-    this.state = {
-      chart30Options: {
-        chart: {
-          toolbar: {
-            show: false
-          },
-          sparkline: {
-            enabled: true
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        colors: ['#3c44b1'],
-        stroke: {
-          color: '#4191ff',
-          curve: 'smooth',
-          width: 4
-        },
-        xaxis: {
-          crosshairs: {
-            width: 1
-          }
-        },
-        yaxis: {
-          min: 0
-        },
-        legend: {
-          show: false
-        }
-      },
-      chart30Data: [
-        {
-          name: 'Customers',
-          data: [47, 38, 56, 24, 45, 54, 38, 47, 38, 56, 24, 56, 24, 65]
-        }
-      ],
-
-      chart31Options: {
-        chart: {
-          toolbar: {
-            show: false
-          },
-          sparkline: {
-            enabled: true
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        colors: ['#f4772e'],
-        stroke: {
-          color: '#4191ff',
-          curve: 'smooth',
-          width: 3
-        },
-        xaxis: {
-          crosshairs: {
-            width: 1
-          }
-        },
-        yaxis: {
-          min: 0
-        },
-        legend: {
-          show: false
-        }
-      },
-      chart31Data: [
-        {
-          name: 'Sales',
-          data: [47, 38, 56, 24, 45, 54, 38, 47, 38, 56, 24, 56, 24, 65]
-        }
-      ]
-    };
+const loadingPassed = (props) => {
+  if (props.loadingPassed){
+    return(
+      <div className="spinner-border text-light" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>        
+    );
+  } else {
+    return(
+      <span className="font-size-xxl mt-1">{props.passed.length}</span>
+    );
   }
-  render() {
+};
+
+const loadingFailed = (props) => {
+  if (props.loadingFailed){
+    return(
+      <div className="spinner-border text-light" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>        
+    );
+  } else {
+    return(
+      <span className="font-size-xxl mt-1">{props.failed.length}</span>
+    );
+  }
+};
+
+const loadingAll2 = (props) => {
+  if (props.loadingAll){
+    return(
+      <div className="spinner-border text-light" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>        
+    );
+  } else {
+    return(
+      new Set(props.products.map((item) =>
+      <span className="font-size-xxl mt-1">{item.sn}</span>
+      ))
+    );
+  }
+};
+
+const loadingAll = (props) => {
+  if (props.loadingAll){
+    return(
+      <div className="spinner-border text-light" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>        
+    );
+  } else {
+    return(
+      <span className="font-size-xxl mt-1">{props.products.length}</span>
+    );
+  }
+};
+
+
+export default function LivePreviewExample(props) {
+
+  const [testValues, setTestValues] = React.useState([]);
+  const [testInfo, setTestInfo] = React.useState([]);
+  const [activeSerial, setActiveSerial] = React.useState('SN');
+  const [activeTN, setActiveTN] = React.useState('TEST NAME');
+  const [activeTF, setActiveTF] = React.useState('TEST FIELD');
+
+  function callAPI(){
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ "sn": activeSerial })
+    };
+    fetch('http://0.0.0.0:4000/getBySerial',requestOptions)
+        .then(res => res.json())
+        .then((data) => {
+          setTestInfo(data);
+          console.log(data.map((test) => test.test_value));
+          console.log(data.map((test) => test.test_name));
+    });
+  }
+
+  const handleClick = event => () => {
+    console.log(event)
+    setActiveSerial(event)
+    callAPI()
+  }
+  const handleClick2 = event => () => {
+    console.log(event)
+    setActiveTN(event)
+    callAPI()
+  }
+  const handleClick3 = event => () => {
+    console.log(event)
+    setActiveTF(event)
+    callAPI()
+  }
+
+  const serials = (props) => {
+    if (props.loadingSerials){
+      return(
+        <div className="spinner-border text-light" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>        
+      );
+    } else {
+      return(
+        props.serials.map((sn, index) => 
+        <div role="menuitem"><a className="dropdown-item" key={index} onClick={handleClick(sn)} >{sn}</a></div>
+      )
+      );
+    }
+  }
+
+  const testNames = (props) => {
+    if (props.loadingTestNames){
+      return(
+        <div className="spinner-border text-light" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>        
+      );
+    } else {
+      return(
+        props.testNames.map((test_name, index) => 
+        <div role="menuitem"><a className="dropdown-item" key={index} onClick={handleClick2(test_name)} >{test_name}</a></div>
+      )
+      );
+    }
+  }
+
+  const testFields = (props) => {
+    if (props.loadingTestFields){
+      return(
+        <div className="spinner-border text-light" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>        
+      );
+    } else {
+      return(
+        props.testFields.map((spec_name, index) => 
+        <div role="menuitem"><a className="dropdown-item" key={index} onClick={handleClick3(spec_name)} >{spec_name}</a></div>
+      )
+      );
+    }
+  }
+
+  const [activeTab, setActiveTab] = useState('1');
+
+  const toggle = tab => {
+      if (activeTab !== tab) setActiveTab(tab);
+  }
     return (
       <Fragment>
         <Row>
           <Col lg="4">
-            <Card className="card-box bg-night-sky border-0 text-light mb-5">
+            <Card className="card-box bg-premium-dark border-0 text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
                     <small className="text-white-50 d-block mb-1 text-uppercase">
-                      New Accounts
+                      Passed Tests
                     </small>
-                    <span className="font-size-xxl mt-1">586,356</span>
+                    <span className="font-size-xxl mt-1">{loadingPassed(props)}</span>
                   </div>
                   <div className="ml-auto">
                     <div className="bg-white text-center text-success d-50 rounded-circle">
@@ -108,26 +192,18 @@ export default class LivePreviewExample extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-up']}
-                    className="text-success mr-1"
-                  />
-                  <span className="text-success pr-1">15.4%</span>
-                  <span className="text-white-50">increase this month</span>
-                </div>
               </CardBody>
             </Card>
           </Col>
           <Col lg="4">
-            <Card className="card-box bg-serious-blue text-light mb-5">
+            <Card className="card-box bg-midnight-bloom text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
                     <small className="text-white-50 d-block mb-1 text-uppercase">
-                      Sales
+                      Failed Tests
                     </small>
-                    <span className="font-size-xxl mt-1">23,274</span>
+                    <span className="font-size-xxl mt-1">{loadingFailed(props)}</span>
                   </div>
                   <div className="ml-auto">
                     <div className="bg-white text-center text-primary d-50 rounded-circle">
@@ -138,14 +214,6 @@ export default class LivePreviewExample extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <FontAwesomeIcon
-                    icon={['fas', 'arrow-up']}
-                    className="text-warning mr-1"
-                  />
-                  <span className="text-warning pr-1">7.4%</span>
-                  <span className="text-white-50">same as before</span>
-                </div>
               </CardBody>
             </Card>
           </Col>
@@ -155,9 +223,9 @@ export default class LivePreviewExample extends Component {
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
                     <small className="text-white-50 d-block mb-1 text-uppercase">
-                      Orders
+                      Warnings
                     </small>
-                    <span className="font-size-xxl mt-1">345</span>
+                    <span className="font-size-xxl mt-1">{loadingAll(props)}</span>
                   </div>
                   <div className="ml-auto">
                     <div className="bg-white text-center text-primary d-50 rounded-circle">
@@ -174,159 +242,85 @@ export default class LivePreviewExample extends Component {
                     className="text-white mr-1"
                   />
                   <span className="text-white px-1">15.4%</span>
-                  <span className="text-white-50">less orders</span>
+                  <span className="text-white-50">{loadingAll(props)}</span>
                 </div>
               </CardBody>
             </Card>
           </Col>
         </Row>
-        <Row>
-          <Col xl="6">
-            <Card className="card-box mb-5">
-              <CardBody className="p-0">
-                <Row className="mt-4">
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'user']}
-                          className="font-size-xxl text-success"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">2,345</b>
-                        <span className="text-black-50 d-block">users</span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'keyboard']}
-                          className="font-size-xxl text-danger"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">3,568</b>
-                        <span className="text-black-50 d-block">clicks</span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'chart-bar']}
-                          className="font-size-xxl text-info"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">$9,693</b>
-                        <span className="text-black-50 d-block">revenue</span>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-                <div className="divider mt-4" />
-                <div className="text-center py-4">
-                  <Button size="sm" color="primary">
-                    <span className="btn-wrapper--icon">
-                      <FontAwesomeIcon icon={['far', 'eye']} />
-                    </span>
-                    <span className="btn-wrapper--label">Generate reports</span>
-                  </Button>
-                </div>
-              </CardBody>
-              <div className="card-footer bg-light text-center">
-                <div className="pt-4 pr-4 pl-4">
-                  <Chart
-                    options={this.state.chart30Options}
-                    series={this.state.chart30Data}
-                    type="line"
-                    height={100}
-                  />
-                </div>
-              </div>
-            </Card>
-          </Col>
-          <Col xl="6">
-            <Card className="card-box mb-5">
-              <div className="card-body pb-1">
-                <Row>
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'user']}
-                          className="font-size-xxl text-success"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">2,345</b>
-                        <span className="text-black-50 d-block">users</span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'keyboard']}
-                          className="font-size-xxl text-danger"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">3,568</b>
-                        <span className="text-black-50 d-block">clicks</span>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col>
-                    <div className="text-center">
-                      <div>
-                        <FontAwesomeIcon
-                          icon={['far', 'chart-bar']}
-                          className="font-size-xxl text-info"
-                        />
-                      </div>
-                      <div className="mt-3 line-height-sm">
-                        <b className="font-size-lg">$9,693</b>
-                        <span className="text-black-50 d-block">revenue</span>
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-                <div className="pt-4 pr-4 pl-4">
-                  <Chart
-                    options={this.state.chart31Options}
-                    series={this.state.chart31Data}
-                    type="line"
-                    height={100}
-                  />
-                </div>
-              </div>
-              <div className="divider" />
-              <div className="my-2 text-center">
-                <FontAwesomeIcon
-                  icon={['fas', 'arrow-up']}
-                  className="text-danger"
-                />
-                <span className="text-danger px-1">15.4%</span>
-                <span className="text-black-50">new sales today</span>
-              </div>
-              <div className="card-footer bg-light p-4 text-center">
-                <Button color="first">
-                  <span className="btn-wrapper--icon">
-                    <FontAwesomeIcon icon={['far', 'eye']} />
-                  </span>
-                  <span className="btn-wrapper--label">View latest sales</span>
-                </Button>
-              </div>
-            </Card>
-          </Col>
-        </Row>
+        <div className="divider mb-4" />
+        <Nav tabs>
+                <NavItem>
+                    <NavLink
+                        className={clsx({active: activeTab === '1'})}
+                        onClick={() => {
+                            toggle('1');
+                        }}
+                    >
+                        Search By Serial Number
+                    </NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink
+                        className={clsx({active: activeTab === '2'})}
+                        onClick={() => {
+                            toggle('2');
+                        }}
+                    >
+                        Search By Test Name
+                    </NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink
+                        className={clsx({active: activeTab === '3'})}
+                        onClick={() => {
+                            toggle('3');
+                        }}
+                    >
+                        Search By Test Field
+                    </NavLink>
+                </NavItem>
+            </Nav>
+            <TabContent className="mb-5" activeTab={activeTab}>
+                <TabPane tabId="1">
+                <div className="mb-0 p-3">
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeSerial}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {serials(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  </div>  
+                </TabPane>
+                <TabPane tabId="2">
+                <div className="mb-0 p-3">
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeTN}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {testNames(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  </div>  
+                </TabPane>
+                <TabPane tabId="3">
+                <div className="mb-0 p-3">
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeTF}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {testFields(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  </div>  
+                </TabPane>
+            </TabContent>
+            <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
     );
-  }
+  
 }
