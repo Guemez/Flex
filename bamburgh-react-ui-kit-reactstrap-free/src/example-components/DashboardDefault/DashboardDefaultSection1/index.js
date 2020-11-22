@@ -210,7 +210,7 @@ export default function LivePreviewExample(props) {
   }
     return (
       <Fragment>
-        <Row>
+        <Row className="padding-top-cards">
           <Col lg="4">
             <Card className="card-box bg-premium-dark border-0 text-light mb-5">
               <CardBody>
