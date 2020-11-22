@@ -18,6 +18,8 @@ import { Row,
    TabPane,
    Button } from 'reactstrap';
 
+import Chart from 'react-apexcharts';
+
 import DashboardDefaultSection5 from 'example-components/DashboardDefault/DashboardDefaultSection5';
 
 const loadingPassed = (props) => {
@@ -78,6 +80,32 @@ const loadingAll = (props) => {
 
 
 export default function LivePreviewExample(props) {
+
+
+
+  const makeGraphs = (props) => {
+    const options = {
+      xaxis: {
+        categories: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.spec_name)
+      }
+    };
+    const series = [
+      {
+        name: activeTN,
+        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseInt(n))
+      }
+    ];
+    return (
+      <Fragment>
+        <Chart options={options} series={series} type="area" />
+      </Fragment>
+    );
+  }
+
+
+
+
+
 
   const [testValues, setTestValues] = React.useState([]);
   const [testInfo, setTestInfo] = React.useState([]);
@@ -347,6 +375,7 @@ export default function LivePreviewExample(props) {
                 <TabPane tabId="2">
                 </TabPane>
             </TabContent>
+            {makeGraphs(props)}
             <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
     );
