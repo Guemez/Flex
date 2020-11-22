@@ -142,7 +142,6 @@ export default function DashboardDefault() {
         />
 
         <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields} limits={limits} loadingLimits={loadingLimits}/>
-        <DashboardDefaultSection5 />
         <Form>
           <FormGroup>
             <Label for="exampleFile">File</Label>
