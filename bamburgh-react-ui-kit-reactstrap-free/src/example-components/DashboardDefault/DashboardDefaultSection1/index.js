@@ -92,7 +92,7 @@ export default function LivePreviewExample(props) {
     const series = [
       {
         name: activeTN,
-        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseInt(n))
+        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n))
       }
     ];
     return (
