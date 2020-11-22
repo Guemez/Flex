@@ -61,10 +61,11 @@ export default function DashboardDefault() {
       setLoadingAll(false);
     })
 
-    fetch('http://0.0.0.0:4000//getLimited')
+    fetch('http://0.0.0.0:4000/getLimited')
     .then(res => res.json())
     .then((data) => {
       setLimits(data);
+      setTestNames(Array.from(new Set(data.map(item => item.test_name))))
       setLoadingLimits(false);
     })
     
@@ -78,7 +79,7 @@ export default function DashboardDefault() {
     fetch('http://0.0.0.0:4000/getTestNames')
     .then(res => res.json())
     .then((data) => {
-      setTestNames(data);
+      //setTestNames(data);
       setLoadingTestNames(false);
     })
 
