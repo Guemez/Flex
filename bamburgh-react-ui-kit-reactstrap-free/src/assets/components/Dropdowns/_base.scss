@@ -27,6 +27,8 @@
   opacity: 0;
   visibility: hidden;
   outline: none !important;
+  overflow:scroll; 
+  max-height: 300px;
 
   &.dropdown {
     opacity: 1;
