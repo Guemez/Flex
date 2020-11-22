@@ -142,7 +142,7 @@ export default function LivePreviewExample(props) {
         data: base.map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       },
       {
-        name: "media",
+        name: "Mean",
         data: Array(base.length).fill(mean)
       }
     ];
@@ -215,7 +215,7 @@ export default function LivePreviewExample(props) {
         data: tmp2
       },
       {
-        name: "moving range",
+        name: "Moving Range",
         data: Array(base.length).fill(dmean/4.301)
       }
     ];
@@ -497,11 +497,17 @@ export default function LivePreviewExample(props) {
                   </div>
                   </Col> 
                   <Col>
+                  <Row className="padding-top-cards"></Row>
+                  <h2>I CHART</h2>
                   <Card>{makeGraphs2(props)}</Card>
+                  <Row className="padding-top-graphs"></Row>
+                  <h2>CAPABILITY HISTOGRAM</h2>
                   <Card>{makeGraphs3(props)}</Card>
-                  </Col>
-                  <Col>
+                  <Row className="padding-top-graphs"></Row>
+                  <h2>MOVING RANGE CHART</h2>
                   <Card>{makeGraphs4(props)}</Card>
+                  <Row className="padding-top-graphs"></Row>
+                  <h2>OBSERVATIONS</h2>
                   <Card>{makeGraphs(props)}</Card>
                   </Col>
                 </TabPane>

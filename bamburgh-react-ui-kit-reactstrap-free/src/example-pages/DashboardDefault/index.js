@@ -7,11 +7,11 @@ import {
   Form,
   Label,
   FormGroup, 
-  FormText
+  FormText, 
+  Row
 } from 'reactstrap';
 
 import DashboardDefaultSection1 from '../../example-components/DashboardDefault/DashboardDefaultSection1';
-import DashboardDefaultSection5 from '../../example-components/DashboardDefault/DashboardDefaultSection5';
 
 import XLSX from 'xlsx';
 
@@ -142,7 +142,7 @@ export default function DashboardDefault() {
         />
 
         <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields} limits={limits} loadingLimits={loadingLimits}/>
-        <Form>
+        <Form className="padding-excel">
           <FormGroup>
             <Label for="exampleFile">File</Label>
             <Input type="file" name="file" id="exampleFile" onChange={(e)=>{
@@ -155,9 +155,9 @@ export default function DashboardDefault() {
             </FormText>
           </FormGroup>
           <Button 
-            className="m-2 button-add"
+            className="button-add"
             variant="contained"
-            color="primary"
+            color="first"
             onClick={handleSubmit3}>
             Submit
           </Button>
