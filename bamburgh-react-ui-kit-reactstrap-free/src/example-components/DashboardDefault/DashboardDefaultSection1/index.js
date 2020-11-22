@@ -16,7 +16,8 @@ import { Row,
    NavLink, 
    TabContent, 
    TabPane,
-   Button } from 'reactstrap';
+   Button,
+   Table } from 'reactstrap';
 
 import Chart from 'react-apexcharts';
 
@@ -76,22 +77,93 @@ const loadingAll = (props) => {
   }
 };
 
-const displayFailed = (props) => {
-  return (
-    props.failed.map( item => 
-    <span className="font-size-l mt-1">{item.sn}{item.test_name}{item.spec_name}</span>
-    )
-  );
-}
+const renderFailTableRows = (props) => {
+  return props.failed.map((item, index) => {
+     const { sn, test_name, spec_name, test_value, test_result, limits_used, start_time, stop_time } = item //destructuring
+     return (   
+      <tr key={sn}>
+        <td>{sn}</td>
+        <td>{test_name}</td>
+        <td>{spec_name}</td>
+        <td>{test_value}</td>
+        <td>{test_result}</td>
+        <td>{limits_used}</td>
+        <td>{start_time}</td>
+        <td>{stop_time}</td>
+      </tr>
+     )
+  })
+};
 
-const displayWarnings = (props) => {
+const renderFailTable = (props) => {
   return (
-    props.limits.filter(item => item.warning == true ).map( item => 
-    <span className="font-size-l mt-1">{item.sn}{item.test_name}{item.spec_name}</span>
-    )
-  );
-}
+    <Fragment>
+      <div className="table-responsive-md">
+        <Table hover bordered striped className="mb-5">
+          <thead className="thead-light">
+            <tr>
+              <th scope="col">Serial number</th>
+              <th scope="col">Test Name</th>
+              <th scope="col">Spec Name</th>
+              <th scope="col">Test Value</th>
+              <th scope="col">Test Result</th>
+              <th scope="col">Limits Used</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">Stop Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderFailTableRows(props)}
+          </tbody>
+        </Table>
+      </div>
+    </Fragment>
+  )
+};
 
+const renderWarningTableRows = (props) => {
+  return props.limits.filter(item => item.warning == true ).map((item, index) => {
+     const { sn, test_name, spec_name, test_value, test_result, limits_used, start_time, stop_time } = item //destructuring
+     return (   
+      <tr key={sn}>
+        <td>{sn}</td>
+        <td>{test_name}</td>
+        <td>{spec_name}</td>
+        <td>{test_value}</td>
+        <td>{test_result}</td>
+        <td>{limits_used}</td>
+        <td>{start_time}</td>
+        <td>{stop_time}</td>
+      </tr>
+     )
+  })
+};
+
+const renderWarningTable = (props) => {
+  return (
+    <Fragment>
+      <div className="table-responsive-md">
+        <Table hover bordered striped className="mb-5">
+          <thead className="thead-light">
+            <tr>
+              <th scope="col">Serial number</th>
+              <th scope="col">Test Name</th>
+              <th scope="col">Spec Name</th>
+              <th scope="col">Test Value</th>
+              <th scope="col">Test Result</th>
+              <th scope="col">Limits Used</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">Stop Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {renderWarningTableRows(props)}
+          </tbody>
+        </Table>
+      </div>
+    </Fragment>
+  )
+};
 
 export default function LivePreviewExample(props) {
 
@@ -103,9 +175,7 @@ export default function LivePreviewExample(props) {
       }
       return newarr
     }
-  }
-
-
+  };
 
   const makeGraphs = (props) => {
     const options = {
@@ -512,10 +582,10 @@ export default function LivePreviewExample(props) {
                   </Col>
                 </TabPane>
                 <TabPane tabId="2">
-                  {displayFailed(props)}
+                  {renderFailTable(props)}
                 </TabPane>
                 <TabPane tabId="3">
-                  {displayWarnings(props)}
+                  {renderWarningTable(props)}
                 </TabPane>
             </TabContent>
       </Fragment>
