@@ -212,7 +212,7 @@ export default function LivePreviewExample(props) {
       <Fragment>
         <Row className="padding-top-cards">
           <Col lg="4">
-            <Card className="card-box bg-premium-dark border-0 text-light mb-5">
+            <Card className="card-box bg-happy-green border-0 text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
@@ -224,7 +224,7 @@ export default function LivePreviewExample(props) {
                   <div className="ml-auto">
                     <div className="bg-white text-center text-success d-50 rounded-circle">
                       <FontAwesomeIcon
-                        icon={['far', 'chart-bar']}
+                        icon={['far', 'check-circle']}
                         className="font-size-xl"
                       />
                     </div>
@@ -234,7 +234,7 @@ export default function LivePreviewExample(props) {
             </Card>
           </Col>
           <Col lg="4">
-            <Card className="card-box bg-midnight-bloom text-light mb-5">
+            <Card className="card-box bg-love-kiss text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
@@ -244,9 +244,9 @@ export default function LivePreviewExample(props) {
                     <span className="font-size-xxl mt-1">{loadingFailed(props)}</span>
                   </div>
                   <div className="ml-auto">
-                    <div className="bg-white text-center text-primary d-50 rounded-circle">
+                    <div className="bg-white text-center text-danger d-50 rounded-circle">
                       <FontAwesomeIcon
-                        icon={['far', 'lightbulb']}
+                        icon={['fas', 'times-circle']}
                         className="font-size-xl"
                       />
                     </div>
@@ -256,7 +256,7 @@ export default function LivePreviewExample(props) {
             </Card>
           </Col>
           <Col lg="4">
-            <Card className="card-box bg-plum-plate text-light mb-5">
+            <Card className="card-box bg-sunny-morning text-light mb-5">
               <CardBody>
                 <div className="d-flex align-items-start">
                   <div className="font-weight-bold">
@@ -266,9 +266,9 @@ export default function LivePreviewExample(props) {
                     <span className="font-size-xxl mt-1">{loadingAll(props)}</span>
                   </div>
                   <div className="ml-auto">
-                    <div className="bg-white text-center text-primary d-50 rounded-circle">
+                    <div className="bg-white text-center text-warning d-50 rounded-circle">
                       <FontAwesomeIcon
-                        icon={['far', 'chart-bar']}
+                        icon={['fas', 'exclamation-triangle']}
                         className="font-size-xl"
                       />
                     </div>
