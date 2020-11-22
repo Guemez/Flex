@@ -92,7 +92,7 @@ export default function LivePreviewExample(props) {
     const series = [
       {
         name: activeTN,
-        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n))
+        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       }
     ];
     return (
@@ -114,7 +114,7 @@ export default function LivePreviewExample(props) {
     const series = [
       {
         name: activeTN,
-        data: base.map(item => item.test_value).map(n => parseFloat(n))
+        data: base.map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       },
       {
         name: "Media",
