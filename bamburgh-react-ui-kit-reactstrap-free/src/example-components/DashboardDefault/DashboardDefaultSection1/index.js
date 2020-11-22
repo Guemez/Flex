@@ -106,8 +106,12 @@ export default function LivePreviewExample(props) {
 
     const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
-    const minVal =  base.map(item => item.test_value).map(n => parseFloat(n))
-    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
+    let minVal =  0
+    let maxVal =  0
+    if(base[0]) {
+      minVal = base[0]["limits_min"]
+      maxVal = base[0]["limits_max"]
+    }
     const options = {
       xaxis: {
         categories: base.map(item => item.sn)
@@ -133,14 +137,17 @@ export default function LivePreviewExample(props) {
       </Fragment>
     );
   }
-
-
+  
   const makeGraphs3 = (props) => {
     
     const base = props.limits.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length )
-    const minVal =  Math.min(base.map(item => item.test_value).map(n => parseFloat(n)))
-    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
+    let minVal =  0
+    let maxVal =  0
+    if(base[0]) {
+      minVal = base[0]["limits_min"]
+      maxVal = base[0]["limits_max"]
+    }
     const ds = Math.sqrt(base.map(item => item.test_value).map(n => parseFloat(n)).map(n => Math.pow(n-mean,2)).reduce((acc, val) => acc + val, 0) / base.length )
     const r = (maxVal-minVal)/7.0
     const options = {
