@@ -121,7 +121,7 @@ export default function LivePreviewExample(props) {
     ];
     return (
       <Fragment>
-        <Chart options={options} series={series} type="area" />
+        <Chart options={options} series={series} type="line" />
       </Fragment>
     );
   }
@@ -142,7 +142,7 @@ export default function LivePreviewExample(props) {
         data: base.map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       },
       {
-        name: "media",
+        name: "Media",
         data: Array(base.length).fill(mean)
       }
     ];
