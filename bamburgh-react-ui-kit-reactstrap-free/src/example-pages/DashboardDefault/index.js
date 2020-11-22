@@ -46,7 +46,7 @@ export default function DashboardDefault() {
       setLoadingAll(false);
     })
 
-    fetch('http://0.0.0.0:4000//getLimited')
+    fetch('http://0.0.0.0:4000/getLimited')
     .then(res => res.json())
     .then((data) => {
       setLimits(data);

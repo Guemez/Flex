@@ -92,7 +92,7 @@ export default function LivePreviewExample(props) {
     const series = [
       {
         name: activeTN,
-        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n))
+        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       }
     ];
     return (
@@ -106,6 +106,8 @@ export default function LivePreviewExample(props) {
 
     const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
+    const minVal =  base.map(item => item.test_value).map(n => parseFloat(n))
+    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
     const options = {
       xaxis: {
         categories: base.map(item => item.sn)
@@ -114,16 +116,47 @@ export default function LivePreviewExample(props) {
     const series = [
       {
         name: activeTN,
-        data: base.map(item => item.test_value).map(n => parseFloat(n))
+        data: base.map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       },
       {
         name: "media",
         data: Array(base.length).fill(mean)
+      }, 
+      {
+        name: "limits",
+        data: [minVal, maxVal]
       }
     ];
     return (
       <Fragment>
-        <Chart options={options} series={series} type="area" />
+        <Chart options={options} series={series} type="line" />
+      </Fragment>
+    );
+  }
+
+
+  const makeGraphs3 = (props) => {
+    
+    const base = props.limits.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
+    const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length )
+    const minVal =  Math.min(base.map(item => item.test_value).map(n => parseFloat(n)))
+    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
+    const ds = Math.sqrt(base.map(item => item.test_value).map(n => parseFloat(n)).map(n => Math.pow(n-mean,2)).reduce((acc, val) => acc + val, 0) / base.length )
+    const r = (maxVal-minVal)/7.0
+    const options = {
+      xaxis: {
+        categories: [minVal, maxVal]
+      }
+    };
+    const series = [
+      {
+        name: activeTN,
+        data: base.map(item => item.test_value).map(n => parseFloat(n)).map(n => (n-mean)/ds)
+      }
+    ];
+    return (
+      <Fragment>
+        <Chart options={options} series={series} type="bar" />
       </Fragment>
     );
   }
@@ -407,6 +440,7 @@ export default function LivePreviewExample(props) {
                 </TabPane>
             </TabContent>
             {makeGraphs2(props)}
+            {makeGraphs3(props)}
             {makeGraphs(props)}
             <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
