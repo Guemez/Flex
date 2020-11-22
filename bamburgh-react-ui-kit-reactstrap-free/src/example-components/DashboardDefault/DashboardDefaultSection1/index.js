@@ -20,8 +20,6 @@ import { Row,
 
 import Chart from 'react-apexcharts';
 
-import DashboardDefaultSection5 from 'example-components/DashboardDefault/DashboardDefaultSection5';
-
 const loadingPassed = (props) => {
   if (props.loadingPassed){
     return(
@@ -78,8 +76,34 @@ const loadingAll = (props) => {
   }
 };
 
+const displayFailed = (props) => {
+  return (
+    props.failed.map( item => 
+    <span className="font-size-l mt-1">{item.sn}{item.test_name}{item.spec_name}</span>
+    )
+  );
+}
+
+const displayWarnings = (props) => {
+  return (
+    props.limits.filter(item => item.warning == true ).map( item => 
+    <span className="font-size-l mt-1">{item.sn}{item.test_name}{item.spec_name}</span>
+    )
+  );
+}
+
 
 export default function LivePreviewExample(props) {
+
+  function diferencia (arr) {
+    if (typeof arr != "undefined"){
+      var newarr = Array(38).fill(0)
+      for(var x = 0; x < arr.length-1; x++){
+        newarr[x] = arr[x+1] - arr[x]
+      }
+      return newarr
+    }
+  }
 
 
 
@@ -106,8 +130,7 @@ export default function LivePreviewExample(props) {
 
     const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
-    const minVal =  base.map(item => item.test_value).map(n => parseFloat(n))
-    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
+
     const options = {
       xaxis: {
         categories: base.map(item => item.sn)
@@ -121,10 +144,6 @@ export default function LivePreviewExample(props) {
       {
         name: "media",
         data: Array(base.length).fill(mean)
-      }, 
-      {
-        name: "limits",
-        data: [minVal, maxVal]
       }
     ];
     return (
@@ -139,19 +158,35 @@ export default function LivePreviewExample(props) {
     
     const base = props.limits.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length )
-    const minVal =  Math.min(base.map(item => item.test_value).map(n => parseFloat(n)))
-    const maxVal =  Math.max(base.map(item => item.test_value).map(n => parseFloat(n)))
+
+    const minArr = base.map(item => item.limits_min).map(n => parseFloat(n))
+    const minMean = (minArr.reduce((acc, val) => acc + val, 0) / minArr.length)
+    const maxArr = base.map(item => item.limits_max).map(n => parseFloat(n))
+    const maxMean = (maxArr.reduce((acc, val) => acc + val, 0) / maxArr.length)
+    const minVal =  minMean
+    const maxVal =  maxMean
+    const r = (maxVal-minVal)/11.0
+    const primero = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal).filter(n => n < (minVal+r)).length
+    const segundo = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r).filter(n => n < (minVal+r*2)).length
+    const tercero = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*2).filter(n => n < (minVal+r*3)).length
+    const cuarto = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*3).filter(n => n < (minVal+r*4)).length
+    const quinto = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*4).filter(n => n < (minVal+r*5)).length
+    const sexto = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*5).filter(n => n < (minVal+r*6)).length
+    const septimo = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*6).filter(n => n < (minVal+r*7)).length
+    const ocho = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*7).filter(n => n < (minVal+r*8)).length
+    const nueve = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*8).filter(n => n < (minVal+r*9)).length
+    const diez = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*9).filter(n => n < (minVal+r*10)).length
+    const once = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*10).filter(n => n < (minVal+r*11)).length
     const ds = Math.sqrt(base.map(item => item.test_value).map(n => parseFloat(n)).map(n => Math.pow(n-mean,2)).reduce((acc, val) => acc + val, 0) / base.length )
-    const r = (maxVal-minVal)/7.0
     const options = {
       xaxis: {
-        categories: [minVal, maxVal]
+        categories: [minVal.toString(), (minVal+r).toString(), (minVal+r*2).toString(), (minVal+r*3).toString(), (minVal+r*4).toString(), (minVal+r*5).toString(), (minVal+r*6).toString(), (minVal+r*7).toString(), (minVal+r*8).toString(), (minVal+r*9).toString(), (minVal+r*10).toString(), maxVal.toString()]
       }
     };
     const series = [
       {
         name: activeTN,
-        data: base.map(item => item.test_value).map(n => parseFloat(n)).map(n => (n-mean)/ds)
+        data: [primero,segundo,tercero,cuarto,quinto, sexto, septimo, ocho, nueve, diez, once]
       }
     ];
     return (
@@ -161,9 +196,35 @@ export default function LivePreviewExample(props) {
     );
   }
 
+  const makeGraphs4 = (props) => {
+    
+    const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
+    const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
+    const tmp1 = base.map(item => item.test_value).map(n => parseFloat(n))
+    const tmp2 = diferencia(tmp1)
+    const dmean = tmp2.reduce((acc, val) => Math.abs(acc) + Math.abs(val), 0) / tmp2.length 
 
-
-
+    const options = {
+      xaxis: {
+        categories: [0]
+      }
+    };
+    const series = [
+      {
+        name: activeTN,
+        data: tmp2
+      },
+      {
+        name: "moving range",
+        data: Array(base.length).fill(dmean/4.301)
+      }
+    ];
+    return (
+      <Fragment>
+        <Chart options={options} series={series} type="line" />
+      </Fragment>
+    );
+  }
 
 
   const [testValues, setTestValues] = React.useState([]);
@@ -362,7 +423,7 @@ export default function LivePreviewExample(props) {
                             toggle('1');
                         }}
                     >
-                        Search By Serial Number
+                        Search Test
                     </NavLink>
                 </NavItem>
                 <NavItem>
@@ -372,7 +433,7 @@ export default function LivePreviewExample(props) {
                             toggle('2');
                         }}
                     >
-                        Search By Test Name
+                        See Failed
                     </NavLink>
                 </NavItem>
                 <NavItem>
@@ -382,7 +443,7 @@ export default function LivePreviewExample(props) {
                             toggle('3');
                         }}
                     >
-                        Search By Test Field
+                        See Warnings
                     </NavLink>
                 </NavItem>
             </Nav>
@@ -390,14 +451,6 @@ export default function LivePreviewExample(props) {
                 <TabPane tabId="1">
                   <Col>
                   <div className="mb-0 p-3">
-                  <UncontrolledDropdown tag="span" className="m-2">
-                    <DropdownToggle color="second" caret>
-                      {activeSerial}
-            </DropdownToggle>
-                    <DropdownMenu >
-                      {serials(props)}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
                   <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTN}
@@ -414,6 +467,14 @@ export default function LivePreviewExample(props) {
                       {testFields(props)}
                     </DropdownMenu>
                   </UncontrolledDropdown>  
+                  <UncontrolledDropdown tag="span" className="m-2">
+                    <DropdownToggle color="second" caret>
+                      {activeSerial}
+            </DropdownToggle>
+                    <DropdownMenu >
+                      {serials(props)}
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
                   {/*<UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTS}
@@ -435,14 +496,22 @@ export default function LivePreviewExample(props) {
                           CLEAR</Button>
                   </div>
                   </Col> 
+                  <Col>
+                  <Card>{makeGraphs2(props)}</Card>
+                  <Card>{makeGraphs3(props)}</Card>
+                  </Col>
+                  <Col>
+                  <Card>{makeGraphs4(props)}</Card>
+                  <Card>{makeGraphs(props)}</Card>
+                  </Col>
                 </TabPane>
                 <TabPane tabId="2">
+                  {displayFailed(props)}
+                </TabPane>
+                <TabPane tabId="3">
+                  {displayWarnings(props)}
                 </TabPane>
             </TabContent>
-            {makeGraphs2(props)}
-            {makeGraphs3(props)}
-            {makeGraphs(props)}
-            <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
     );
   
