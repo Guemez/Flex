@@ -18,6 +18,8 @@ import { Row,
    TabPane,
    Button } from 'reactstrap';
 
+import Chart from 'react-apexcharts';
+
 import DashboardDefaultSection5 from 'example-components/DashboardDefault/DashboardDefaultSection5';
 
 const loadingPassed = (props) => {
@@ -48,8 +50,8 @@ const loadingFailed = (props) => {
   }
 };
 
-const loadingAll2 = (props) => {
-  if (props.loadingAll){
+const loadingLimits = (props) => {
+  if (props.loadingLimits){
     return(
       <div className="spinner-border text-light" role="status">
         <span className="sr-only">Loading...</span>
@@ -57,9 +59,7 @@ const loadingAll2 = (props) => {
     );
   } else {
     return(
-      new Set(props.products.map((item) =>
-      <span className="font-size-xxl mt-1">{item.sn}</span>
-      ))
+      <span className="font-size-xxl mt-1">{props.limits.filter(item => item.warning == true ).length}</span>
     );
   }
 };
@@ -81,27 +81,38 @@ const loadingAll = (props) => {
 
 export default function LivePreviewExample(props) {
 
+
+
+  const makeGraphs = (props) => {
+    const options = {
+      xaxis: {
+        categories: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.spec_name)
+      }
+    };
+    const series = [
+      {
+        name: activeTN,
+        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseInt(n))
+      }
+    ];
+    return (
+      <Fragment>
+        <Chart options={options} series={series} type="area" />
+      </Fragment>
+    );
+  }
+
+
+
+
+
+
   const [testValues, setTestValues] = React.useState([]);
   const [testInfo, setTestInfo] = React.useState([]);
   const [activeSerial, setActiveSerial] = React.useState('SERIAL NUMBER');
   const [activeTN, setActiveTN] = React.useState('TEST NAME');
   const [activeTF, setActiveTF] = React.useState('TEST FIELD');
   const [activeTS, setActiveTS] = React.useState('TEST STATUS');
-
-  function callAPI(){
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "sn": activeSerial })
-    };
-    fetch('http://0.0.0.0:4000/getBySerial',requestOptions)
-        .then(res => res.json())
-        .then((data) => {
-          setTestInfo(data);
-          console.log(data.map((test) => test.test_value));
-          console.log(data.map((test) => test.test_name));
-    });
-  }
 
   const handleClick = event => () => {
     console.log(event)
@@ -115,24 +126,15 @@ export default function LivePreviewExample(props) {
         .then(res => res.json())
         .then((data) => {
           setTestInfo(data);
-          console.log(data);
+          console.log(testInfo);
     });
   }
   const handleClick2 = event => () => {
     console.log(event)
     setActiveTN(event)
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ "test_field": activeTF })
-    };
-    fetch('http://0.0.0.0:4000/getByField',requestOptions)
-        .then(res => res.json())
-        .then((data) => {
-          setTestInfo(data);
-          console.log(data.map((test) => test.test_value));
-          console.log(data.map((test) => test.test_name));
-    });
+    setTestInfo(props.products.filter( test => test.test_name == activeTN))
+    console.log(testInfo)
+
   }
   const handleClick3 = event => () => {
     console.log(event)
@@ -146,13 +148,22 @@ export default function LivePreviewExample(props) {
         .then(res => res.json())
         .then((data) => {
           setTestInfo(data);
-          console.log(data);
+          console.log(testInfo);
     });
   }
 
   const handleClick4 = event => () => {
-    console.log(event)
     setActiveTS(event)
+    if (activeTS == "WARNING"){
+      setTestInfo(props.limits.filter(item => item.warning == true))
+    } else if(activeTS == "PASS"){
+        setTestInfo(props.products.filter(item => item.test_result == "Pass"))
+      } else if (activeTS == "FAIL"){
+        setTestInfo(props.products.filter(item => item.test_result == "Fail"))
+      } else {
+        setTestInfo(props.products)
+    }
+    console.log(testInfo)
   }
 
   const serials = (props) => {
@@ -263,12 +274,12 @@ export default function LivePreviewExample(props) {
                     <small className="text-white-50 d-block mb-1 text-uppercase">
                       Warnings
                     </small>
-                    <span className="font-size-xxl mt-1">{loadingAll(props)}</span>
+                    <span className="font-size-xxl mt-1">{loadingLimits(props)}</span>
                   </div>
                   <div className="ml-auto">
                     <div className="bg-white text-center text-primary d-50 rounded-circle">
                       <FontAwesomeIcon
-                        icon={['far', 'chart-bar']}
+                        icon={['far', 'clock']}
                         className="font-size-xl"
                       />
                     </div>
@@ -331,14 +342,14 @@ export default function LivePreviewExample(props) {
                       {testNames(props)}
                     </DropdownMenu>
                   </UncontrolledDropdown>
-                  <UncontrolledDropdown tag="span" className="m-2">
+                  {/* <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTF}
             </DropdownToggle>
                     <DropdownMenu >
                       {testFields(props)}
                     </DropdownMenu>
-                  </UncontrolledDropdown>
+                  </UncontrolledDropdown>*/}  
                   <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTS}
@@ -348,12 +359,12 @@ export default function LivePreviewExample(props) {
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("PASS")} >PASS</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FAIL")} >FAIL</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("WARNING")} >WARNING</a></div>
-                    <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FATAL WARNING")} >FATAL WARNING</a></div>
                     </DropdownMenu>
                   </UncontrolledDropdown>
                   <Button className="m-2" outline color="second" onClick={() => {
                             setActiveSerial("SERIAL NUMBER");
                             setActiveTF("TEST FIELD");
+                            setActiveTN("TEST NAME");
                             setTestValues([]);
                             setActiveTS("TEST STATUS");
                         }}>
@@ -364,6 +375,7 @@ export default function LivePreviewExample(props) {
                 <TabPane tabId="2">
                 </TabPane>
             </TabContent>
+            {makeGraphs(props)}
             <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
     );

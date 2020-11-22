@@ -19,6 +19,8 @@ export default function DashboardDefault() {
   const [testNames, setTestNames] = React.useState([]);
   const [loadingTestFields, setLoadingTestFields] = React.useState(true);
   const [testFields, setTestFields] = React.useState([]);
+  const [loadingLimits, setLoadingLimits] = React.useState(true);
+  const [limits, setLimits] = React.useState([]);
 
   const descriptionElementRef = React.useRef(null);
   
@@ -42,6 +44,13 @@ export default function DashboardDefault() {
     .then((data) => {
       setProducts(data);
       setLoadingAll(false);
+    })
+
+    fetch('http://0.0.0.0:4000//getLimited')
+    .then(res => res.json())
+    .then((data) => {
+      setLimits(data);
+      setLoadingLimits(false);
     })
     
     fetch('http://0.0.0.0:4000/getSerialNos')
@@ -80,7 +89,7 @@ export default function DashboardDefault() {
           titleHeading="Default"
         />
 
-        <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields}/>
+        <DashboardDefaultSection1 failed={failed} passed={passed} loadingPassed={loadingPassed} loadingFailed={loadingFailed} products={products} serials={serials} loadingAll={loadingAll} loadingSerials={loadingSerials} loadingTestNames={loadingTestNames} loadingTestFields={loadingTestFields} testNames={testNames} testFields={testFields} limits={limits} loadingLimits={loadingLimits}/>
         <DashboardDefaultSection5 />
       </Fragment>
   );
