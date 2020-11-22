@@ -102,6 +102,32 @@ export default function LivePreviewExample(props) {
     );
   }
 
+  const makeGraphs2 = (props) => {
+
+    const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
+    const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
+    const options = {
+      xaxis: {
+        categories: base.map(item => item.sn)
+      }
+    };
+    const series = [
+      {
+        name: activeTN,
+        data: base.map(item => item.test_value).map(n => parseFloat(n))
+      },
+      {
+        name: "media",
+        data: Array(base.length).fill(mean)
+      }
+    ];
+    return (
+      <Fragment>
+        <Chart options={options} series={series} type="area" />
+      </Fragment>
+    );
+  }
+
 
 
 
@@ -113,6 +139,7 @@ export default function LivePreviewExample(props) {
   const [activeTN, setActiveTN] = React.useState('TEST NAME');
   const [activeTF, setActiveTF] = React.useState('TEST FIELD');
   const [activeTS, setActiveTS] = React.useState('TEST STATUS');
+  const [fields, setFields] = React.useState([]);
 
   const handleClick = event => () => {
     console.log(event)
@@ -134,7 +161,9 @@ export default function LivePreviewExample(props) {
     setActiveTN(event)
     setTestInfo(props.products.filter( test => test.test_name == activeTN))
     console.log(testInfo)
-
+    setFields(Array.from(new Set(props.products.filter( test => test.test_name == activeTN).map(item => item.spec_name))))
+    console.log(fields)
+    makeGraphs2(props)
   }
   const handleClick3 = event => () => {
     console.log(event)
@@ -150,6 +179,8 @@ export default function LivePreviewExample(props) {
           setTestInfo(data);
           console.log(testInfo);
     });
+    console.log("====================")
+    console.log(props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF).map(item => item.sn))
   }
 
   const handleClick4 = event => () => {
@@ -207,8 +238,8 @@ export default function LivePreviewExample(props) {
       );
     } else {
       return(
-        props.testFields.map((spec_name, index) => 
-        <div role="menuitem"><a className="dropdown-item" key={index} onClick={handleClick3(spec_name)} >{spec_name}</a></div>
+        fields.map( item => 
+        <div role="menuitem"><a className="dropdown-item" onClick={handleClick3(item)} >{item}</a></div>
       )
       );
     }
@@ -342,15 +373,15 @@ export default function LivePreviewExample(props) {
                       {testNames(props)}
                     </DropdownMenu>
                   </UncontrolledDropdown>
-                  {/* <UncontrolledDropdown tag="span" className="m-2">
+                   <UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTF}
             </DropdownToggle>
                     <DropdownMenu >
                       {testFields(props)}
                     </DropdownMenu>
-                  </UncontrolledDropdown>*/}  
-                  <UncontrolledDropdown tag="span" className="m-2">
+                  </UncontrolledDropdown>  
+                  {/*<UncontrolledDropdown tag="span" className="m-2">
                     <DropdownToggle color="second" caret>
                       {activeTS}
             </DropdownToggle>
@@ -360,7 +391,7 @@ export default function LivePreviewExample(props) {
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("FAIL")} >FAIL</a></div>
                     <div role="menuitem"><a className="dropdown-item" onClick={handleClick4("WARNING")} >WARNING</a></div>
                     </DropdownMenu>
-                  </UncontrolledDropdown>
+                      </UncontrolledDropdown> */}
                   <Button className="m-2" outline color="second" onClick={() => {
                             setActiveSerial("SERIAL NUMBER");
                             setActiveTF("TEST FIELD");
@@ -375,6 +406,7 @@ export default function LivePreviewExample(props) {
                 <TabPane tabId="2">
                 </TabPane>
             </TabContent>
+            {makeGraphs2(props)}
             {makeGraphs(props)}
             <DashboardDefaultSection5 testInfo={testInfo} testValues={testValues}/>
       </Fragment>
