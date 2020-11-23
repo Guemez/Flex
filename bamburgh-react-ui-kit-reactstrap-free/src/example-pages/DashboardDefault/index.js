@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 
 import { PageTitle } from '../../layout-components';
 import {
@@ -8,7 +8,6 @@ import {
   Label,
   FormGroup, 
   FormText, 
-  Row
 } from 'reactstrap';
 
 import DashboardDefaultSection1 from '../../example-components/DashboardDefault/DashboardDefaultSection1';

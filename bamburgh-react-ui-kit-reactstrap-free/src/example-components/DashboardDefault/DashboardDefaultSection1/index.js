@@ -58,21 +58,7 @@ const loadingLimits = (props) => {
     );
   } else {
     return(
-      <span className="font-size-xxl mt-1">{props.limits.filter(item => item.warning == true ).length}</span>
-    );
-  }
-};
-
-const loadingAll = (props) => {
-  if (props.loadingAll){
-    return(
-      <div className="spinner-border text-light" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>        
-    );
-  } else {
-    return(
-      <span className="font-size-xxl mt-1">{props.products.length}</span>
+      <span className="font-size-xxl mt-1">{props.limits.filter(item => item.warning === true ).length}</span>
     );
   }
 };
@@ -122,7 +108,7 @@ const renderFailTable = (props) => {
 };
 
 const renderWarningTableRows = (props) => {
-  return props.limits.filter(item => item.warning == true ).map((item, index) => {
+  return props.limits.filter(item => item.warning === true ).map((item, index) => {
      const { sn, test_name, spec_name, test_value, test_result, limits_used, start_time, stop_time } = item //destructuring
      return (   
       <tr key={sn}>
@@ -180,13 +166,13 @@ export default function LivePreviewExample(props) {
   const makeGraphs = (props) => {
     const options = {
       xaxis: {
-        categories: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.spec_name)
+        categories: props.products.filter(item => item.sn === activeSerial).filter(item => item.test_name === activeTN).map(item => item.spec_name)
       }
     };
     const series = [
       {
         name: activeTN,
-        data: props.products.filter(item => item.sn == activeSerial).filter(item => item.test_name == activeTN).map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
+        data: props.products.filter(item => item.sn === activeSerial).filter(item => item.test_name === activeTN).map(item => item.test_value).map(n => parseFloat(n).toFixed(4))
       }
     ];
     return (
@@ -198,7 +184,7 @@ export default function LivePreviewExample(props) {
 
   const makeGraphs2 = (props) => {
 
-    const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
+    const base = props.products.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
 
     const options = {
@@ -226,9 +212,7 @@ export default function LivePreviewExample(props) {
 
   const makeGraphs3 = (props) => {
     
-    const base = props.limits.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
-    const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length )
-
+    const base = props.limits.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF)
     const minArr = base.map(item => item.limits_min).map(n => parseFloat(n))
     const minMean = (minArr.reduce((acc, val) => acc + val, 0) / minArr.length)
     const maxArr = base.map(item => item.limits_max).map(n => parseFloat(n))
@@ -247,7 +231,6 @@ export default function LivePreviewExample(props) {
     const nueve = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*8).filter(n => n < (minVal+r*9)).length
     const diez = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*9).filter(n => n < (minVal+r*10)).length
     const once = base.map(item => item.test_value).map(n => parseFloat(n)).filter(n => n > minVal+r*10).filter(n => n < (minVal+r*11)).length
-    const ds = Math.sqrt(base.map(item => item.test_value).map(n => parseFloat(n)).map(n => Math.pow(n-mean,2)).reduce((acc, val) => acc + val, 0) / base.length )
     const options = {
       xaxis: {
         categories: [minVal.toString(), (minVal+r).toString(), (minVal+r*2).toString(), (minVal+r*3).toString(), (minVal+r*4).toString(), (minVal+r*5).toString(), (minVal+r*6).toString(), (minVal+r*7).toString(), (minVal+r*8).toString(), (minVal+r*9).toString(), (minVal+r*10).toString(), maxVal.toString()]
@@ -268,8 +251,7 @@ export default function LivePreviewExample(props) {
 
   const makeGraphs4 = (props) => {
     
-    const base = props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF)
-    const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
+    const base = props.products.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF)
     const tmp1 = base.map(item => item.test_value).map(n => parseFloat(n))
     const tmp2 = diferencia(tmp1)
     const dmean = tmp2.reduce((acc, val) => Math.abs(acc) + Math.abs(val), 0) / tmp2.length 
@@ -323,9 +305,9 @@ export default function LivePreviewExample(props) {
   const handleClick2 = event => () => {
     console.log(event)
     setActiveTN(event)
-    setTestInfo(props.products.filter( test => test.test_name == activeTN))
+    setTestInfo(props.products.filter( test => test.test_name === activeTN))
     console.log(testInfo)
-    setFields(Array.from(new Set(props.products.filter( test => test.test_name == activeTN).map(item => item.spec_name))))
+    setFields(Array.from(new Set(props.products.filter( test => test.test_name === activeTN).map(item => item.spec_name))))
     console.log(fields)
     makeGraphs2(props)
   }
@@ -344,17 +326,17 @@ export default function LivePreviewExample(props) {
           console.log(testInfo);
     });
     console.log("====================")
-    console.log(props.products.filter(item => item.test_name == activeTN).filter(item => item.spec_name == activeTF).map(item => item.sn))
+    console.log(props.products.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF).map(item => item.sn))
   }
 
   const handleClick4 = event => () => {
     setActiveTS(event)
-    if (activeTS == "WARNING"){
-      setTestInfo(props.limits.filter(item => item.warning == true))
-    } else if(activeTS == "PASS"){
-        setTestInfo(props.products.filter(item => item.test_result == "Pass"))
-      } else if (activeTS == "FAIL"){
-        setTestInfo(props.products.filter(item => item.test_result == "Fail"))
+    if (activeTS === "WARNING"){
+      setTestInfo(props.limits.filter(item => item.warning === true))
+    } else if(activeTS === "PASS"){
+        setTestInfo(props.products.filter(item => item.test_result === "Pass"))
+      } else if (activeTS === "FAIL"){
+        setTestInfo(props.products.filter(item => item.test_result === "Fail"))
       } else {
         setTestInfo(props.products)
     }
