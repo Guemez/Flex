@@ -187,6 +187,11 @@ export default function LivePreviewExample(props) {
     const base = props.products.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF)
     const mean = (base.map(item => item.test_value).map(n => parseFloat(n)).reduce((acc, val) => acc + val, 0) / base.length ) 
 
+    const base2 = props.limits.filter(item => item.test_name === activeTN).filter(item => item.spec_name === activeTF)
+
+    const minArr = base2.map(item => item.limits_min).map(n => parseFloat(n))
+    const maxArr = base2.map(item => item.limits_max).map(n => parseFloat(n))
+
     const options = {
       xaxis: {
         categories: base.map(item => item.sn)
@@ -200,6 +205,14 @@ export default function LivePreviewExample(props) {
       {
         name: "Mean",
         data: Array(base.length).fill(mean)
+      },
+      {
+        name: "Min",
+        data: minArr
+      },
+      {
+        name: "Max",
+        data: maxArr
       }
     ];
     return (
